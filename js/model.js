@@ -1,12 +1,12 @@
 import Zabo from 'zabo-sdk-js';
-import { LIMIT_API_DATA_CALL } from './config.js';
+import { LIMIT_API_DATA_CALL,CLIENT_ID } from './config.js';
 let currency;
 
 const zaboInit = async () => {
   try {
     const zabo = await Zabo.init({
-      clientId:
-        'P3tfNcM9evWUnVvrKZQGqurhB6yFJMGTBM6lyC2JyKz77OZvS28U8roEzuzWDCpP',
+      clientId:CLIENT_ID
+        ,
       env: 'sandbox',
     });
     return zabo;
