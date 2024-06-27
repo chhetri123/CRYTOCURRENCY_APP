@@ -1,15 +1,21 @@
-import Zabo from 'zabo-sdk-js';
-import { LIMIT_API_DATA_CALL,CLIENT_ID } from './config.js';
-let currency;
+import { API_KEY } from "./config.js";
+const corsProxy = "https://cors-anywhere.herokuapp.com/";
+const APIURL =
+  "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
 
-const zaboInit = async () => {
+const fetchCrypto = async (limit = 10, start = 1) => {
+  console.log(limit, start);
   try {
-    const zabo = await Zabo.init({
-      clientId:CLIENT_ID
-        ,
-      env: 'sandbox',
-    });
-    return zabo;
+    const response = await fetch(
+      `${corsProxy}${APIURL}?limit=${limit}&start=${start}`,
+      {
+        method: "GET",
+        headers: {
+          "X-CMC_PRO_API_KEY": API_KEY,
+        },
+      }
+    );
+    return await response.json();
   } catch (err) {
     throw err;
   }
@@ -17,32 +23,19 @@ const zaboInit = async () => {
 
 export const fetchAPICurrency = async () => {
   try {
-    const zabo = await zaboInit();
-    currency = await zabo.currencies.getList({ limit: LIMIT_API_DATA_CALL });
-    const { data } = await currency;
-    if (!data) throw new Error('Not Fetch Data');
+    const data = await fetchCrypto();
+    if (!data) throw new Error("Not Fetch Data");
     return data;
   } catch (err) {
     throw err;
   }
 };
 
-export const showExchangeRate = async (data) => {
+export const loadMore = async (limit, start) => {
   try {
-    const zabo = await zaboInit();
-    const tickers = data.ticker;
-    const curr = await zabo.currencies.getExchangeRates({ tickers });
-    return curr.rate;
-  } catch (err) {
-    throw err;
-  }
-};
-export const loadMore = async () => {
-  try {
-    currency = await currency.next();
-    const { data } = await currency;
-    if (!data) throw new Error('Not Fetch Data');
-    return data;
+    const additionalData = await fetchCrypto(limit, start);
+    if (!additionalData) throw new Error("Not Fetch Data");
+    return additionalData;
   } catch (err) {
     throw err;
   }
