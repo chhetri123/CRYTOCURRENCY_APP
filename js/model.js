@@ -1,42 +1,25 @@
 import { API_KEY } from "./config.js";
-const corsProxy = "https://cors-anywhere.herokuapp.com/";
-const APIURL =
-  "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
 
-const fetchCrypto = async (limit = 10, start = 1) => {
-  console.log(limit, start);
-  try {
-    const response = await fetch(
-      `${corsProxy}${APIURL}?limit=${limit}&start=${start}`,
-      {
-        method: "GET",
-        headers: {
-          "X-CMC_PRO_API_KEY": API_KEY,
-        },
-      }
-    );
-    return await response.json();
-  } catch (err) {
-    throw err;
+export class Model {
+  constructor() {
+    this.corsProxy = "https://cors-anywhere.herokuapp.com/";
+    this.APIURL =
+      "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
+    this.headers = { "X-CMC_PRO_API_KEY": API_KEY };
   }
-};
 
-export const fetchAPICurrency = async () => {
-  try {
-    const data = await fetchCrypto();
-    if (!data) throw new Error("Not Fetch Data");
-    return data;
-  } catch (err) {
-    throw err;
+  async fetchCrypto(limit = 10, start = 1) {
+    const url = `${this.corsProxy}${this.APIURL}?limit=${limit}&start=${start}`;
+    const response = await fetch(url, { method: "GET", headers: this.headers });
+    if (!response.ok) throw new Error("Failed to fetch data");
+    return response.json();
   }
-};
 
-export const loadMore = async (limit, start) => {
-  try {
-    const additionalData = await fetchCrypto(limit, start);
-    if (!additionalData) throw new Error("Not Fetch Data");
-    return additionalData;
-  } catch (err) {
-    throw err;
+  async fetchAPICurrency() {
+    return this.fetchCrypto();
   }
-};
+
+  async loadMore(limit, start) {
+    return this.fetchCrypto(limit, start);
+  }
+}

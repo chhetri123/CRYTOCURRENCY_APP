@@ -1,22 +1,36 @@
-import { fetchAPICurrency, loadMore } from "./model.js";
-import { view } from "./view.js";
+import { Model } from "./model.js";
+import { View } from "./view.js";
 
-const controllFetchedCurr = async () => {
-  try {
-    const data = await fetchAPICurrency();
-    view.renderCurrency(data);
-  } catch (err) {
-    view.error(err.message);
+class Controller {
+  constructor() {
+    this.model = new Model();
+    this.view = new View();
+    this.init();
   }
-};
 
-const loadMoreCurr = async (limit, start) => {
-  const data = await loadMore(limit, start);
-  view.renderCurrency(data);
-};
+  async fetchAndRenderCurrency() {
+    try {
+      const data = await this.model.fetchAPICurrency();
+      this.view.renderCurrency(data);
+    } catch (err) {
+      this.view.showError(err.message);
+    }
+  }
 
-const init = () => {
-  controllFetchedCurr();
-  view.addEventHandler(loadMoreCurr);
-};
-init();
+  init() {
+    this.fetchAndRenderCurrency();
+    this.view.addLoadMoreHandler(this.handleLoadMore.bind(this));
+  }
+
+  async handleLoadMore(limit, start) {
+    try {
+      const data = await this.model.loadMore(limit, start);
+      this.view.renderCurrency(data);
+    } catch (err) {
+      this.view.showError(err.message);
+    }
+  }
+}
+
+// Create an instance of the Controller class
+new Controller();
