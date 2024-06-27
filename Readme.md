@@ -1,5 +1,4 @@
-Certainly! I'll go through each class, explaining the purpose of each method and line, as well as the benefits of this structure.
-
+## How each Class works and communicate
 1. Controller Class:
 
 ```javascript
