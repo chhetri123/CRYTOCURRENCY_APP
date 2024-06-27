@@ -196,4 +196,4 @@ Overall Benefits of this Structure:
 5. Reusability: Components like the Model could potentially be reused in other parts of a larger application.
 
 This structure follows the Model-View-Controller (MVC) pattern, which is a well-established architectural pattern for creating maintainable and scalable applications.
-For MORE ABOUT [Model-View-Controller](#readmeMVC.md)
+For MORE ABOUT [Model-View-Controller](https://github.com/chhetri123/CRYTOCURRENCY-LISTING-WEB-APPLICATION/blob/class_based/ReadmeMVC.md)
